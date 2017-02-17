@@ -127,11 +127,14 @@
         lastImage = [UIImage imageWithCGImage:cgImageRef];
         CGImageRelease(cgImageRef);
     } else {
-        CIImage *inputImage = [CIImage imageWithCGImage:newImage.CGImage];
+        inputImage = [CIImage imageWithCGImage:newImage.CGImage];
         CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"];
         [filter setValuesForKeysWithDictionary:@{kCIInputImageKey:inputImage,@"inputRadius":[NSNumber numberWithFloat:blurNumber]}];
         CIImage *cgImage = [filter valueForKey:kCIOutputImageKey];
-        CGImageRef cgImageRef = [ctx createCGImage:cgImage fromRect:[cgImage extent]];
+    //修改为传入图片的大小
+        cgImage = [cgImage imageByCroppingToRect:inputImage.extent];
+    
+        cgImageRef = [ctx createCGImage:cgImage fromRect:[cgImage extent]];
         lastImage = [UIImage imageWithCGImage:cgImageRef];
         CGImageRelease(cgImageRef);
     }
